@@ -8,6 +8,7 @@ Main destination is Sydney Airport, Australia.
 """
 
 from functions.airport_data import load_airports, clean_airports
+from functions.calculations import calculate_distance
 
 start_airport = "Milan Malpensa"
 destination = "Sydney"
@@ -61,7 +62,28 @@ def main():
              "latitude_deg", "longitude_deg"]
         ].to_string(index=False)
     )
+    milan = cleaned_airports[
+        cleaned_airports["ident"] == "LIMC"
+    ].iloc[0]
 
+    sydney = cleaned_airports[
+        cleaned_airports["ident"] == "YSSY"
+    ].iloc[0]
+
+    distance = calculate_distance(
+        milan["latitude_deg"],
+        milan["longitude_deg"],
+        sydney["latitude_deg"],
+        sydney["longitude_deg"]
+    )
+
+    print("\nDistance between Milan and Sydney:")
+    print(f"{distance:,.2f} km")
+
+    if distance <= max_range_km:
+        print("Our plane can fly directly to Sydney.")
+    else:
+        print("Our plane needs intermediate stops to reach Sydney.")
 
 if __name__ == "__main__":
     main()
