@@ -1,0 +1,20 @@
+
+# Python virtual environment
+.venv/
+
+# Python temporary files
+__pycache__/
+*.pyc
+
+# Local configuration
+.env
+.vscode/
+
+# Generated files
+outputs/
+
+# System files
+.DS_Store
+Thumbs.db
+
+
