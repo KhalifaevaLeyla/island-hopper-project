@@ -9,6 +9,7 @@ Main destination is Sydney Airport, Australia.
 
 from functions.airport_data import load_airports, clean_airports
 from functions.calculations import calculate_distance
+from functions.flight_routes import find_reachable_airports
 
 start_airport = "Milan Malpensa"
 destination = "Sydney"
@@ -84,6 +85,22 @@ def main():
         print("Our plane can fly directly to Sydney.")
     else:
         print("Our plane needs intermediate stops to reach Sydney.")
+
+    reachable_airports = find_reachable_airports(
+        cleaned_airports,
+        "LIMC",
+        max_range_km
+    )
+
+    if reachable_airports is not None:
+        print(f"\nAirports within range: {len(reachable_airports)}")
+
+        print("\nTen closest airports:")
+        print(
+            reachable_airports[
+                ["ident", "name", "iso_country", "distance_km"]
+            ].head(10).to_string(index=False)
+        )
 
 if __name__ == "__main__":
     main()
