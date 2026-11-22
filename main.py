@@ -9,7 +9,7 @@ Main destination is Sydney Airport, Australia.
 
 from functions.airport_data import load_airports, clean_airports
 from functions.calculations import calculate_distance
-from functions.flight_routes import find_reachable_airports
+from functions.flight_routes import find_reachable_airports, build_connections, find_route
 
 start_airport = "Milan Malpensa"
 destination = "Sydney"
@@ -101,6 +101,46 @@ def main():
                 ["ident", "name", "iso_country", "distance_km"]
             ].head(10).to_string(index=False)
         )
+
+    connections = build_connections(cleaned_airports, max_range_km)
+    print(f"Airports in network: {len(connections)}")
+    print(f"Connections from Milan: {len(connections['LIMC'])}")
+    print(f"Connections from Sydney: {len(connections['YSSY'])}")
+
+
+    route = find_route(connections, "LIMC", "YSSY")
+
+    if route is None:
+        print("Sydney cannot be reached with the current aircraft range.")
+    else:
+        flights = len(route) - 1
+        stops = max(0, len(route) - 2)
+
+        print("\nRoute with the fewest stops:")
+        print(" -> ".join(route))
+
+        print(f"\nNumber of flights: {flights}")
+        print(f"Intermediate stops: {stops}")
+
+    for i in range(len(route) - 1):
+            first = cleaned_airports[
+                cleaned_airports["ident"] == route[i]
+            ].iloc[0]
+
+            second = cleaned_airports[
+                cleaned_airports["ident"] == route[i + 1]
+            ].iloc[0]
+
+            distance = calculate_distance(
+                first["latitude_deg"],
+                first["longitude_deg"],
+                second["latitude_deg"],
+                second["longitude_deg"]
+            )
+
+            print(f"{route[i]} -> {route[i + 1]}: {distance:.2f} km")
+
+            assert distance <= max_range_km
 
 if __name__ == "__main__":
     main()
