@@ -35,10 +35,7 @@ def clean_airports(airports):
     )
 
     # Remove coordinates outside the possible geographic range
-    cleaned = cleaned[
-        cleaned["latitude_deg"].between(-90, 90)
-        & cleaned["longitude_deg"].between(-180, 180)
-    ]
+    cleaned = cleaned[cleaned["latitude_deg"].between(-90, 90)& cleaned["longitude_deg"].between(-180, 180)]
 
     # Remove duplicate airport identifiers
     cleaned = cleaned.drop_duplicates(subset="ident")

@@ -2,7 +2,7 @@
 """
 Check that flights can be added in both directions by using created add_connection function.
 """
-from functions.flight_routes import add_connection, find_route
+from functions.flight_routes import add_connection, find_route, find_airports_within_stops
 
 connections = {}
 
@@ -38,4 +38,17 @@ assert find_route(connections, "LIMC", "unknown") is None
 assert find_route(connections, "LIMC", "LIMC") == ["LIMC"]
 
 print("All route tests passed!")
+
+
+# Check how far we can travel with one intermediate stop
+reachable = find_airports_within_stops(connections, "LIMC", 1)
+
+assert reachable["LIMC"] == 0
+assert reachable["airport_a"] == 1
+assert reachable["airport_b"] == 2
+assert "YSSY" not in reachable
+
+print("Stop limit tests passed!")
+
+
 
